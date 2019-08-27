@@ -15,15 +15,15 @@ class CreateParticipantesTable extends Migration
     {
         Schema::create('participantes', function (Blueprint $table) {
 						$table->bigIncrements('id');
-						$table->string('nombre');
-						$table->string('apellido');
+						$table->string('nombre', 30);
+						$table->string('apellido', 30);
 						$table->unsignedInteger('categoria_id');
-						$table->string('status');
+						$table->string('status'); // Bool?
             $table->string('email')->unique();
             $table->date('fechaNacimiento');
-            $table->string('telefono');
-            $table->string('direccion');
-            $table->string('cedula');
+            $table->string('telefono', 30);
+            $table->string('direccion', 100);
+            $table->string('cedula', 11);
             $table->rememberToken();
             $table->timestamps();
         });

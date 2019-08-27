@@ -15,8 +15,8 @@ class ParticipantesController extends Controller
      */
     public function index()
     {
-
-			$participantes = Participante::all('nombre', 'apellido', 'email', 'status', 'id', 'categoria_id');
+			$participantes = Participante::select('nombre', 'apellido', 'email', 'status', 'id', 'categoria_id')
+					->paginate(15);
 
       return view('participantes.welcome', compact('participantes'));
     }
@@ -29,6 +29,7 @@ class ParticipantesController extends Controller
     public function create()
     {
 				$categorias = Categoria::all();
+
         return view('participantes.create', compact('categorias'));
     }
 
@@ -41,6 +42,14 @@ class ParticipantesController extends Controller
     public function store(Request $request)
     {
 			// Validation here!
+			$this->validate($request, [
+				'nombre' 					=> 'required',
+				'apellido' 				=> 'required',
+				'cedula' 					=> 'required|alpha_dash|starts_with:V-,E-',
+				'email' 					=> 'email',
+				'fechaNacimiento' => 'date',
+				'categoria_id'		=> 'integer'
+			]);
 
 			Participante::create([
 				'nombre' 					=> $request->input('nombre'),
