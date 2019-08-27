@@ -43,14 +43,14 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-			// Validation here!
+			// Validation 
 			$this->validate($request, [
 				'name' 				=> 'required',
 				'lastname' 		=> 'required',
-				'idNumber' 		=> 'required|alpha_dash|starts_with:V-,E-',
+				'idNumber' 		=> 'required|alpha_dash', //|starts_with:V-,E-
 				'email' 			=> 'email',
-				'birthdate' 	=> 'date',
-				'category_id'	=> 'integer'
+				'birthdate' 	=> 'date|required',
+				'category_id'	=> 'required|integer|exists:categories,id'
 			]);
 
 			User::create([
@@ -100,7 +100,15 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
-    {				
+    {
+				$this->validate($request, [
+					'name' 				=> 'required',
+					'lastname' 		=> 'required',
+					'email' 			=> 'email',
+					'birthdate' 	=> 'date|required',
+					'category_id'	=> 'integer|exists:categories,id'
+				]);	
+
 				$user->update(request(
 					['name', 'lastname', 'email', 'phone', 'address', 'birthdate']
 				));

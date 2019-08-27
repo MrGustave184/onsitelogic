@@ -6,15 +6,15 @@
 		
 		<div class="form-group">
 			<label for="name">Name: </label>
-		<input name="name" type="text" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}">
+		<input name="name" type="text" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="lastname">Lastname: </label>
-			<input name="lastname" type="text" class="form-control" id="lastname" placeholder="Lastname" value="{{ old('lastname') }}">
+			<input name="lastname" type="text" class="form-control" id="lastname" placeholder="Lastname" value="{{ old('lastname') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="idNumber">ID Number: </label>
-			<input name="idNumber" type="text" class="form-control" id="idNumber" placeholder="ID Number" value="{{ old('idNumber') }}">
+			<input name="idNumber" type="text" class="form-control" id="idNumber" placeholder="ID Number" value="{{ old('idNumber') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="email">Email: </label>
@@ -30,11 +30,11 @@
 		</div>
 		<div class="form-group">
 			<label for="birthdate">Birthdate: </label>
-			<input name="birthdate" type="date" class="form-control" id="birthdate" value="{{ old('birthdate') }}">
+			<input name="birthdate" type="date" class="form-control" id="birthdate" value="{{ old('birthdate') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="category">Category </label>
-			<select name="category_id" class="form-control" id="category">
+			<select name="category_id" class="form-control" id="category" required>
 				@if($categories->count())
 					<option value="">Select a category...</option>
 					@foreach($categories as $category)

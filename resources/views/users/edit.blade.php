@@ -5,7 +5,7 @@
 		<tbody>
 			<tr>
 				<td class="bg-dark text-white" style="width: 16%">Name</td>
-				<td>{{ $user->name }}</td>
+				<td><a href="/users/{{ $user->id }}">{{ $user->name }}</a></td>
 			</tr>
 			<tr>
 				<td class="bg-dark text-white">Lastname</td>
@@ -35,11 +35,11 @@
 		
 		<div class="form-group">
 			<label for="name">Name: </label>
-			<input name="name" type="text" class="form-control" id="name" value="{{ $user->name }}">
+			<input name="name" type="text" class="form-control" id="name" value="{{ $user->name }}" required>
 		</div>
 		<div class="form-group">
 			<label for="lastname">Lastname: </label>
-			<input name="lastname" type="text" class="form-control" id="lastname" value="{{ $user->lastname }}">
+			<input name="lastname" type="text" class="form-control" id="lastname" value="{{ $user->lastname }}" required>
 		</div>
 
 		<div class="form-group">
@@ -56,7 +56,7 @@
 		</div>
 		<div class="form-group">
 			<label for="birthdate">Birthdate: </label>
-			<input name="birthdate" type="date" class="form-control" id="birthdate" value="{{ $user->birthdate->toDateString() }}">
+			<input name="birthdate" type="date" class="form-control" id="birthdate" value="{{ $user->birthdate->toDateString() }}" required>
 		</div>
 		<button type="submit" class="btn btn-success">Update</button>
 	</form>
