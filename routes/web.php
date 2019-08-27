@@ -13,4 +13,4 @@
 
 // Route::get('/', 'ParticipantesController@index');
 
-Route::resource('/participantes', 'ParticipantesController');
+Route::resource('/users', 'UsersController');

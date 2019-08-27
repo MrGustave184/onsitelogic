@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Participante extends Model
 {
-		// All dates in the dates array are automatically converted into Carbon instances
-		protected $dates = ['fechaNacimiento'];
-
     /**
      * The attributes that are mass assignable.
      *
