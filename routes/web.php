@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', 'ParticipantesController@index');
+
+Route::resource('/participantes', 'ParticipantesController');
