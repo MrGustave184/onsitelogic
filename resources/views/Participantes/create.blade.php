@@ -44,7 +44,6 @@
 			</select>
 		</div>
 
-			<button type="submit" name="submit" class="btn btn-primary">Registrar</button>
-
+		<button type="submit" class="btn btn-primary">Registrar</button>
 	</form>
 @endsection

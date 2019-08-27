@@ -16,8 +16,8 @@
 			<tbody>
 				@foreach($participantes as $participante)
 					<tr>
-						
-						<th scope="row">{{ $participante->id }}</th>
+						{{-- $loop->iteration displays the current loop iteration starting from 1 --}}
+						<th scope="row">{{ $loop->iteration }}</th>
 						<td><a href="/participantes/{{ $participante->id }}">{{ $participante->nombre }}</a></td>
 						<td>{{ $participante->apellido }}</td>
 						<td>{{ $participante->email }}</td>

@@ -28,8 +28,10 @@
 	<div style="margin:40px 0 40px 0">
 		<h3 class="text-center">Editar</h3>
 	</div>
-<form method="POST" action="/participantes">
+	
+	<form method="POST" action="/participantes/{{ $participante->id }}">
 		@csrf
+		{{ method_field('PATCH') }}
 		
 		<div class="form-group">
 			<label for="nombre">Nombre: </label>
@@ -54,8 +56,9 @@
 		</div>
 		<div class="form-group">
 			<label for="fechaNacimiento">Fecha de nacimiento: </label>
-			<input name="fechaNacimiento" type="date" class="form-control" id="fechaNacimiento" value="{{ $participante->fechaNacimiento }}">
+			<input name="fechaNacimiento" type="date" class="form-control" id="fechaNacimiento" value="{{ $participante->fechaNacimiento->toDateString() }}">
 		</div>
+		<button type="submit" class="btn btn-success">Actualizar</button>
 	</form>
 
 @endsection

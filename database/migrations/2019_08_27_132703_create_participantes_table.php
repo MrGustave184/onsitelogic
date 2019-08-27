@@ -13,7 +13,7 @@ class CreateParticipantesTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('participantes', function (Blueprint $table) {
 						$table->bigIncrements('id');
 						$table->string('nombre');
 						$table->string('apellido');

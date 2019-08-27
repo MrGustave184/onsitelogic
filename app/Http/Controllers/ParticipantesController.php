@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 use App\Categoria;
+use App\Participante;
 
 class ParticipantesController extends Controller
 {
@@ -16,7 +16,7 @@ class ParticipantesController extends Controller
     public function index()
     {
 
-			$participantes = User::all('nombre', 'apellido', 'email', 'status', 'id', 'categoria_id');
+			$participantes = Participante::all('nombre', 'apellido', 'email', 'status', 'id', 'categoria_id');
 
       return view('participantes.welcome', compact('participantes'));
     }
@@ -42,7 +42,7 @@ class ParticipantesController extends Controller
     {
 			// Validation here!
 
-			User::create([
+			Participante::create([
 				'nombre' 					=> $request->input('nombre'),
 				'apellido' 				=> $request->input('apellido'),
 				'cedula'					=> $request->input('cedula'),
@@ -63,10 +63,8 @@ class ParticipantesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Participante $participante)
     {
-			$participante = User::findOrfail($id);
-
       return view('participantes.show', compact('participante'));
     }
 
@@ -76,10 +74,9 @@ class ParticipantesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Participante $participante)
     {
 			$categorias = Categoria::all();
-			$participante = User::findOrfail($id);
 
       return view('participantes.edit', compact(['participante', 'categorias']));
     }
@@ -91,9 +88,13 @@ class ParticipantesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, Participante $participante)
+    {				
+				$participante->update(request(
+					['id', 'nombre', 'apellido', 'email', 'telefono', 'direccion', 'fechaNacimiento']
+				));
+
+				return redirect('/participantes/' . $participante->id);
     }
 
     /**
@@ -102,8 +103,10 @@ class ParticipantesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy(Participante $participante)
+    {		
+				$participante->delete();
+
+				return redirect('/participantes');
     }
 }

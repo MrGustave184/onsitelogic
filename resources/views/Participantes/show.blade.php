@@ -42,16 +42,18 @@
 		</tbody>
 	</table>
 
+	{{-- Editar --}}
 	<div class="row">
 		<div class="col-md-1">
-
 			<a href="/participantes/{{ $participante->id }}/edit"><button class="btn btn-primary">Editar</button></a>
-
 		</div>
 
+		{{-- Eliminar --}}
 		<div class="col-md-1">
-			<form action="">
-				<button class="btn btn-danger">Eliminar</button>
+			<form method="POST" action="/participantes/{{ $participante->id }}">
+				@csrf
+				@method('DELETE')
+				<button type="submit" name="eliminar" class="btn btn-danger">Eliminar</button>
 			</form>
 		</div>
 	</div>
