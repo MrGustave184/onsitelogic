@@ -58,10 +58,12 @@
 					<h1 class="display-4 text-center">Test Project</h1>
 				</div>
 			</div>
-		
-			<div class="content">
-				@include('includes.messages')
 
+	
+		
+			<div class="content" id="app">
+				@include('includes.messages')
+				
 				@yield('content')
 			</div>
 

@@ -11,8 +11,8 @@
 |
 */
 
-// Route::get('/', 'ParticipantesController@index');
-
 Route::resource('/users', 'UsersController');
 
-Route::get('/categories/{category}', 'CategoriesController@index');
+// Categories
+Route::get('/categories/{category}', 'CategoriesController@index'); // Make resourceful later!
+

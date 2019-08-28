@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,30 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Create a group of routes to protect them under the API middleware
+
+// I still need to remove this logic from the api routes. Same user controller or dedicated api controller?
+Route::group([], function () {
+
+	// Fetch all users
+	Route::get('users', function () {
+
+		// Here we need to join the users and categories tables to return 
+		// the name of the user's category
+		// There is another more readable way to do this????????
+			$users = DB::table('users')
+				->join('categories', 'users.category_id', '=', 'categories.id')
+				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category')
+				->orderBy('users.created_at', 'desc')
+				->paginate(15);
+
+			return $users;
+	});
+
+	// Fetch single user
+	Route::get('users/{user}', function (User $user) {
+		return $user;
+	});
+
+	// Create user
 });

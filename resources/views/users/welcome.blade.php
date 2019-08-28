@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-	@if($users->count())
+	<users-component></users-component>
+	
+	{{-- @if($users->count())
 		<table class="table table-hover" id="participantes">
 			<thead class="thead-dark" id="mytable">
 				<tr>
-					{{-- <th scope="col">#</th> --}}
 					<th scope="col">Name</th>
 					<th scope="col">Last Name</th>
 					<th scope="col">Email</th>
@@ -16,8 +17,6 @@
 			<tbody>
 				@foreach($users as $user)
 					<tr>
-						{{-- $loop->iteration displays the current loop iteration starting from 1 --}}
-						{{-- <th scope="row">{{ $loop->iteration }}</th> --}}
 						<td><a href="/users/{{ $user->id }}">{{ $user->name }}</a></td>
 						<td>{{ $user->lastname }}</td>
 						<td>{{ $user->email }}</td>
@@ -30,5 +29,6 @@
 		{{ $users->links() }}
 	@else
 		<p>There are no users yet!</p>
-	@endif
+	@endif --}}
+	
 @endsection

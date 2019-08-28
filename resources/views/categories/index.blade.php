@@ -2,7 +2,7 @@
 
 @section('content')
 	<div class="text-center" style="margin-bottom: 40px;">
-		<h2>Category: {{ $current_category }}</h2>
+		<h1>Category: {{ $current_category }}</h1>
 	</div>
 
 	@if($users->count())

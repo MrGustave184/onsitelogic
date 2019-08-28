@@ -15,10 +15,7 @@ class CategoriesController extends Controller
      */
     public function index(Category $category)
     {
-
-			// Validate category here!
-
-			$users = User::select('name', 'lastname', 'email', 'status', 'id', 'category_id')
+			$users = User::select('id', 'name', 'lastname', 'email', 'status', 'category_id')
 					->where('category_id', $category->id)
 					->latest()
 					->paginate(15);
