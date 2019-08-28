@@ -14,3 +14,5 @@
 // Route::get('/', 'ParticipantesController@index');
 
 Route::resource('/users', 'UsersController');
+
+Route::get('/categories/{category}', 'CategoriesController@index');

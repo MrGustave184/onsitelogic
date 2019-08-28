@@ -15,7 +15,7 @@ $factory->define(User::class, function (Faker $faker) {
 				'birthdate' => $faker->date(),
 				'phone' => $faker->phoneNumber,
 				'address' => $faker->address,
-				'idNumber' => $faker->randomNumber(8),
+				'idNumber' => $faker->randomElement(['V-', 'E-']) . $faker->randomNumber(8),
 				'remember_token' => Str::random(10),
 				'category_id' => function() {
 					// Find a random category in the DB

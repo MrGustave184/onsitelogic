@@ -14,7 +14,7 @@
 		</div>
 		<div class="form-group">
 			<label for="idNumber">ID Number: </label>
-			<input name="idNumber" type="text" class="form-control" id="idNumber" placeholder="ID Number" value="{{ old('idNumber') }}" required>
+			<input name="idNumber" type="text" class="form-control" id="idNumber" placeholder="V- / E-" value="{{ old('idNumber') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="email">Email: </label>
@@ -35,11 +35,15 @@
 		<div class="form-group">
 			<label for="category">Category </label>
 			<select name="category_id" class="form-control" id="category" required>
+				
 				@if($categories->count())
 					<option value="">Select a category...</option>
 					@foreach($categories as $category)
-						<option value="{{ $category->id }}">{{ $category->name}}</option>
+					{{-- Here we check if current category id == old category id to rememeber the selection --}}
+						<option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name}}</option>
 					@endforeach
+				@else
+						<option value="">There are no categories yet</option>
 				@endif
 			</select>
 		</div>

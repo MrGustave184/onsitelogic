@@ -28,4 +28,19 @@ class ReadUsersTest extends TestCase
 			->assertSee($user->birthdate->toFormattedDateString())
 			->assertSee($user->category->name);
 	}
+
+	/** @test */
+	public function admin_can_filter_users_by_category()
+	{
+		$this->withoutExceptionHandling();
+		
+		$categoryOne = factory('App\Category')->create();
+		$categoryTwo = factory('App\Category')->create();
+		$userInCategoryOne = factory('App\User')->create(['category_id' => $categoryOne->id]);
+		$userNotInCategoryOne = factory('App\User')->create(['category_id' => $categoryTwo->id]);
+
+		$this->get('/categories/' . $categoryOne->id)
+			->assertSee($userInCategoryOne->name)
+			->assertDontSee($userNotInCategoryOne->name);
+	}
 }

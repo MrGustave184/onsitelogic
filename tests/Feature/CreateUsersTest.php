@@ -11,7 +11,7 @@ class CreateUsersTest extends TestCase
 	use RefreshDatabase;
 
 	/** @test */
-	 public function admin_can_register_users()
+	public function admin_can_register_users()
 	{
 		// $this->withoutExceptionHandling();
 			// Given we are the admin

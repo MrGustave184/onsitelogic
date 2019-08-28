@@ -16,6 +16,7 @@ class UsersController extends Controller
     public function index()
     {
 			$users = User::select('name', 'lastname', 'email', 'status', 'id', 'category_id')
+					->latest()
 					->paginate(15);
 
       return view('users.welcome', [
@@ -30,9 +31,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-				$categories = Category::all();
-
-        return view('users.create', compact('categories'));
+        return view('users.create');
     }
 
     /**
@@ -47,7 +46,7 @@ class UsersController extends Controller
 			$this->validate($request, [
 				'name' 				=> 'required',
 				'lastname' 		=> 'required',
-				'idNumber' 		=> 'required|alpha_dash', //|starts_with:V-,E-
+				'idNumber' 		=> 'required|alpha_dash|starts_with:V-,E-', 
 				'email' 			=> 'email',
 				'birthdate' 	=> 'date|required',
 				'category_id'	=> 'required|integer|exists:categories,id'
@@ -87,9 +86,7 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-			$categories = Category::all();
-
-      return view('users.edit', compact(['user', 'categories']));
+      return view('users.edit', compact('user'));
     }
 
     /**
@@ -113,7 +110,7 @@ class UsersController extends Controller
 					['name', 'lastname', 'email', 'phone', 'address', 'birthdate']
 				));
 
-				return redirect('/users/' . $user->id);
+				return redirect('/users/' . $user->id)->with('success', 'User has been updated');
     }
 
     /**
