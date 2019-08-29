@@ -1806,8 +1806,36 @@ __webpack_require__.r(__webpack_exports__);
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       axios.get('api/users?page=' + page).then(function (response) {
-        console.log(response.data);
+        console.log('fetching all users...');
         _this.list = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      return;
+    },
+    // Check in a user
+    checkUser: function checkUser(user) {
+      if (user.status == 'asistente' && !confirm("Do you really want to uncheck this user?")) {
+        return;
+      }
+
+      user.status = user.status == 'asistente' ? 'inasistente' : 'asistente';
+      axios.post('api/users/' + user.id + '/check').then(function (response) {
+        console.log(response.data);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      return;
+    },
+    // Delete user
+    deleteUser: function deleteUser(user) {
+      var _this2 = this;
+
+      if (!confirm("Do you really want to delete this user?")) return;
+      axios["delete"]('api/users/' + user.id).then(function (response) {
+        console.log('User deleted...');
+
+        _this2.fetchUsers();
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6275,7 +6303,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.title {\n\tmargin-bottom: 40px;\n}\n.actionButton {\n\tmargin-left: 5px;\n}\n", ""]);
+exports.push([module.i, "\n.title {\n\tmargin-bottom: 40px;\n}\n.actionButton {\n\tmargin-left: 5px;\n\tcursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -39179,34 +39207,149 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
-    _vm._v(" "),
     _c(
       "table",
       { staticClass: "table table-hover", attrs: { id: "participantes" } },
       [
-        _vm._m(1),
+        _vm._m(0),
         _vm._v(" "),
         _vm._l(_vm.list.data, function(user) {
-          return _c("tbody", { key: user.id }, [
-            _c("tr", [
-              _c("td", [
-                _c("a", { attrs: { href: "/users/" + user.id } }, [
-                  _vm._v(_vm._s(user.name))
+          return _c(
+            "tbody",
+            { key: user.id },
+            [
+              _c("transition", { attrs: { name: "slide-fade" } }, [
+                _c("tr", [
+                  _c("td", [
+                    _c("a", { attrs: { href: "/users/" + user.id } }, [
+                      _vm._v(_vm._s(user.name))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.lastname))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.email))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.category))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("img", {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: user.status == "asistente",
+                          expression: "user.status == 'asistente'"
+                        }
+                      ],
+                      staticClass: "mb-2",
+                      attrs: {
+                        src: "images/check.png",
+                        alt: "",
+                        width: "24",
+                        height: "24"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("img", {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: user.status == "inasistente",
+                          expression: "user.status == 'inasistente'"
+                        }
+                      ],
+                      staticClass: "mb-2",
+                      attrs: {
+                        src: "images/uncheck.png",
+                        alt: "",
+                        width: "24",
+                        height: "24"
+                      }
+                    }),
+                    _vm._v(
+                      "\n\t\t\t\t\t\t\t\t" +
+                        _vm._s(user.status) +
+                        "\n\t\t\t\t\t\t\t"
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "row" }, [
+                    _c("div", { staticClass: "actionButton" }, [
+                      _c(
+                        "a",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: user.status == "inasistente",
+                              expression: "user.status == 'inasistente'"
+                            }
+                          ],
+                          staticClass: "btn btn-success btn-sm text-white",
+                          on: {
+                            click: function($event) {
+                              return _vm.checkUser(user)
+                            }
+                          }
+                        },
+                        [_vm._v("Check in")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: user.status == "asistente",
+                              expression: "user.status == 'asistente'"
+                            }
+                          ],
+                          staticClass: "btn btn-secondary btn-sm text-white",
+                          on: {
+                            click: function($event) {
+                              return _vm.checkUser(user)
+                            }
+                          }
+                        },
+                        [_vm._v("Uncheck")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "actionButton" }, [
+                      _c(
+                        "a",
+                        { staticClass: "btn btn-info btn-sm text-white" },
+                        [_vm._v("Edit")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "actionButton" }, [
+                      _c("form", { attrs: { action: "" } }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-danger btn-sm text-white",
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteUser(user)
+                              }
+                            }
+                          },
+                          [_vm._v("X")]
+                        )
+                      ])
+                    ])
+                  ])
                 ])
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.lastname))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.email))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.category))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(user.status))]),
-              _vm._v(" "),
-              _vm._m(2, true)
-            ])
-          ])
+              ])
+            ],
+            1
+          )
         }),
         _vm._v(" "),
         _c("pagination", {
@@ -39219,14 +39362,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center title" }, [
-      _c("h1", [_vm._v("Users")])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -39250,32 +39385,6 @@ var staticRenderFns = [
         ])
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "row" }, [
-      _c("div", { staticClass: "actionButton" }, [
-        _c("form", { attrs: { action: "" } }, [
-          _c("button", { staticClass: "btn btn-success btn-sm" }, [
-            _vm._v("Check in")
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "actionButton" }, [
-        _c("form", { attrs: { action: "" } }, [
-          _c("button", { staticClass: "btn btn-info btn-sm" }, [_vm._v("Edit")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "actionButton" }, [
-        _c("form", { attrs: { action: "" } }, [
-          _c("button", { staticClass: "btn btn-danger btn-sm" }, [_vm._v("X")])
-        ])
-      ])
-    ])
   }
 ]
 render._withStripped = true

@@ -39,5 +39,20 @@ Route::group([], function () {
 		return $user;
 	});
 
-	// Create user
+	// Check in user
+	Route::post('users/{user}/check', function (User $user) {
+		$status = $user->status == 'asistente' ? 'inasistente' : 'asistente';
+
+		$user->update(
+			['status' => $status]
+		);
+		return $user->status;
+	});
+
+	// Delete User
+	Route::delete('users/{user}', function (User $user) {
+		$user->delete();
+
+		return 'User deleted...';
+	});
 });

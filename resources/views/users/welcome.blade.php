@@ -1,7 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-	<users-component></users-component>
+		<div class="text-center title">
+			<h1>Users</h1>
+		</div>
+
+		@if($users->count())
+			<users-component></users-component>
+		@else 
+			<hr>
+			<h3 class="text-center">There are no users yet!</h3>
+		@endif
 	
 	{{-- @if($users->count())
 		<table class="table table-hover" id="participantes">
