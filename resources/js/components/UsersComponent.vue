@@ -1,5 +1,11 @@
 <template>
 	<div>
+		filters
+		<div class="row">
+			<a class="btn btn-info text-white" @click="filterUsers('')" >Clear</a>
+			<a class="btn btn-info text-white" @click="filterUsers('checkedIn')" >Checked in</a>
+			<a class="btn btn-info text-white" @click="filterUsers('notCheckedIn')" >Not Checked in</a>
+		</div>
 			<table class="table table-hover" id="participantes">
 				<thead class="thead-dark" id="mytable">
 					<tr>
@@ -12,16 +18,15 @@
 					</tr>
 				</thead>
 				<tbody v-for="user in list.data" v-bind:key="user.id">
-					<transition name="slide-fade">
 						<tr>
 							<td><a v-bind:href="'/users/' + user.id">{{ user.name }}</a></td>
 							<td>{{ user.lastname }}</td>
 							<td>{{ user.email }}</td>
 							<td>{{ user.category }}</td>
 							<td>
-									<img v-show="user.status == 'asistente'" class="mb-2" src="images/check.png" alt="" width="24" height="24">
-									<img v-show="user.status == 'inasistente'" class="mb-2" src="images/uncheck.png" alt="" width="24" height="24">
-									{{ user.status }}
+								<img v-show="user.status == 'asistente'" class="mb-2" src="images/check.png" alt="" width="24" height="24">
+								<img v-show="user.status == 'inasistente'" class="mb-2" src="images/uncheck.png" alt="" width="24" height="24">
+								{{ user.status }}
 								</td>
 
 							<!-- Actions -->
@@ -40,7 +45,6 @@
 								</div>
 							</td>
 						</tr>
-					</transition>
 				</tbody>
 
 				<pagination :data="list" @pagination-change-page="fetchUsers"></pagination>
@@ -54,7 +58,10 @@
 		data: function() {
 			return {
 				list: {},
+				// Filtersarray goes here!!!!
 
+				// The filter property will hold the current filter
+				filter: '',
 				user: {
 					id: '',
 					name: '',
@@ -70,12 +77,18 @@
 			console.log('Users component mounted...');
 
 			this.fetchUsers();
+			// this.filterUsers('checkedIn');
 		},
 
 		methods: {
 			// Fetch all users
 			fetchUsers: function (page = 1) {
-				axios.get('api/users?page=' + page)
+
+				let requestRoute = 'api/users?page=' + page;
+				
+				if(this.filter) requestRoute += '&filter=' + this.filter;
+
+				axios.get(requestRoute)
 					.then((response) => {
 						console.log('fetching all users...');
 						this.list = response.data;
@@ -87,12 +100,20 @@
 					return;
 			},
 
+			filterUsers: function (filter) {
+				this.filter = filter;
+
+				this.fetchUsers();
+			},
+
 			// Check in a user
 			checkUser: function (user) {
+				// If user is already checked in, ask for comfirmation before uncheck it
 				if(user.status == 'asistente' && (! confirm("Do you really want to uncheck this user?"))) {
 					return;
 				}
 				
+				// Update user status
 				user.status = user.status == 'asistente' ? 'inasistente' : 'asistente';
 
 				axios.post('api/users/' + user.id + '/check')

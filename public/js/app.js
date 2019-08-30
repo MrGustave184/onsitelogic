@@ -1781,10 +1781,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       list: {},
+      // The filter property will hold the current filter
+      filter: '',
       user: {
         id: '',
         name: '',
@@ -1797,15 +1803,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     console.log('Users component mounted...');
-    this.fetchUsers();
+    this.fetchUsers(); // this.filterUsers('checkedIn');
   },
   methods: {
     // Fetch all users
-    fetchUsers: function fetchUsers() {
+    fetchUsers: function fetchUsers(page) {
       var _this = this;
 
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get('api/users?page=' + page).then(function (response) {
+      var requestRoute = 'api/users?page=' + page;
+      if (this.filter) requestRoute += '&filter=' + this.filter;
+      axios.get(requestRoute).then(function (response) {
         console.log('fetching all users...');
         _this.list = response.data;
       })["catch"](function (error) {
@@ -1813,11 +1820,17 @@ __webpack_require__.r(__webpack_exports__);
       });
       return;
     },
+    filterUsers: function filterUsers(filter) {
+      this.filter = filter;
+      this.fetchUsers();
+    },
     // Check in a user
     checkUser: function checkUser(user) {
+      // If user is already checked in, ask for comfirmation before uncheck it
       if (user.status == 'asistente' && !confirm("Do you really want to uncheck this user?")) {
         return;
-      }
+      } // Update user status
+
 
       user.status = user.status == 'asistente' ? 'inasistente' : 'asistente';
       axios.post('api/users/' + user.id + '/check').then(function (response) {
@@ -39207,6 +39220,48 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm._v("\n\tfilters\n\t"),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-info text-white",
+          on: {
+            click: function($event) {
+              return _vm.filterUsers("")
+            }
+          }
+        },
+        [_vm._v("Clear")]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-info text-white",
+          on: {
+            click: function($event) {
+              return _vm.filterUsers("checkedIn")
+            }
+          }
+        },
+        [_vm._v("Checked in")]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-info text-white",
+          on: {
+            click: function($event) {
+              return _vm.filterUsers("notCheckedIn")
+            }
+          }
+        },
+        [_vm._v("Not Checked in")]
+      )
+    ]),
+    _vm._v(" "),
     _c(
       "table",
       { staticClass: "table table-hover", attrs: { id: "participantes" } },
@@ -39214,44 +39269,66 @@ var render = function() {
         _vm._m(0),
         _vm._v(" "),
         _vm._l(_vm.list.data, function(user) {
-          return _c(
-            "tbody",
-            { key: user.id },
-            [
-              _c("transition", { attrs: { name: "slide-fade" } }, [
-                _c("tr", [
-                  _c("td", [
-                    _c("a", { attrs: { href: "/users/" + user.id } }, [
-                      _vm._v(_vm._s(user.name))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.lastname))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.email))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.category))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c("img", {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: user.status == "asistente",
-                          expression: "user.status == 'asistente'"
-                        }
-                      ],
-                      staticClass: "mb-2",
-                      attrs: {
-                        src: "images/check.png",
-                        alt: "",
-                        width: "24",
-                        height: "24"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("img", {
+          return _c("tbody", { key: user.id }, [
+            _c("tr", [
+              _c("td", [
+                _c("a", { attrs: { href: "/users/" + user.id } }, [
+                  _vm._v(_vm._s(user.name))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(user.lastname))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(user.email))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(user.category))]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: user.status == "asistente",
+                      expression: "user.status == 'asistente'"
+                    }
+                  ],
+                  staticClass: "mb-2",
+                  attrs: {
+                    src: "images/check.png",
+                    alt: "",
+                    width: "24",
+                    height: "24"
+                  }
+                }),
+                _vm._v(" "),
+                _c("img", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: user.status == "inasistente",
+                      expression: "user.status == 'inasistente'"
+                    }
+                  ],
+                  staticClass: "mb-2",
+                  attrs: {
+                    src: "images/uncheck.png",
+                    alt: "",
+                    width: "24",
+                    height: "24"
+                  }
+                }),
+                _vm._v(
+                  "\n\t\t\t\t\t\t\t" + _vm._s(user.status) + "\n\t\t\t\t\t\t\t"
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "row" }, [
+                _c("div", { staticClass: "actionButton" }, [
+                  _c(
+                    "a",
+                    {
                       directives: [
                         {
                           name: "show",
@@ -39260,96 +39337,59 @@ var render = function() {
                           expression: "user.status == 'inasistente'"
                         }
                       ],
-                      staticClass: "mb-2",
-                      attrs: {
-                        src: "images/uncheck.png",
-                        alt: "",
-                        width: "24",
-                        height: "24"
+                      staticClass: "btn btn-success btn-sm text-white",
+                      on: {
+                        click: function($event) {
+                          return _vm.checkUser(user)
+                        }
                       }
-                    }),
-                    _vm._v(
-                      "\n\t\t\t\t\t\t\t\t" +
-                        _vm._s(user.status) +
-                        "\n\t\t\t\t\t\t\t"
-                    )
-                  ]),
+                    },
+                    [_vm._v("Check in")]
+                  ),
                   _vm._v(" "),
-                  _c("td", { staticClass: "row" }, [
-                    _c("div", { staticClass: "actionButton" }, [
-                      _c(
-                        "a",
+                  _c(
+                    "a",
+                    {
+                      directives: [
                         {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: user.status == "inasistente",
-                              expression: "user.status == 'inasistente'"
-                            }
-                          ],
-                          staticClass: "btn btn-success btn-sm text-white",
-                          on: {
-                            click: function($event) {
-                              return _vm.checkUser(user)
-                            }
+                          name: "show",
+                          rawName: "v-show",
+                          value: user.status == "asistente",
+                          expression: "user.status == 'asistente'"
+                        }
+                      ],
+                      staticClass: "btn btn-secondary btn-sm text-white",
+                      on: {
+                        click: function($event) {
+                          return _vm.checkUser(user)
+                        }
+                      }
+                    },
+                    [_vm._v("Uncheck")]
+                  )
+                ]),
+                _vm._v(" "),
+                _vm._m(1, true),
+                _vm._v(" "),
+                _c("div", { staticClass: "actionButton" }, [
+                  _c("form", { attrs: { action: "" } }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-danger btn-sm text-white",
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteUser(user)
                           }
-                        },
-                        [_vm._v("Check in")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: user.status == "asistente",
-                              expression: "user.status == 'asistente'"
-                            }
-                          ],
-                          staticClass: "btn btn-secondary btn-sm text-white",
-                          on: {
-                            click: function($event) {
-                              return _vm.checkUser(user)
-                            }
-                          }
-                        },
-                        [_vm._v("Uncheck")]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "actionButton" }, [
-                      _c(
-                        "a",
-                        { staticClass: "btn btn-info btn-sm text-white" },
-                        [_vm._v("Edit")]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "actionButton" }, [
-                      _c("form", { attrs: { action: "" } }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger btn-sm text-white",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteUser(user)
-                              }
-                            }
-                          },
-                          [_vm._v("X")]
-                        )
-                      ])
-                    ])
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
                   ])
                 ])
               ])
-            ],
-            1
-          )
+            ])
+          ])
         }),
         _vm._v(" "),
         _c("pagination", {
@@ -39385,6 +39425,16 @@ var staticRenderFns = [
         ])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "actionButton" }, [
+      _c("a", { staticClass: "btn btn-info btn-sm text-white" }, [
+        _vm._v("Edit")
+      ])
+    ])
   }
 ]
 render._withStripped = true
