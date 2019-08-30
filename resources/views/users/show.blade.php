@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+<form action="">
 	<table class="table">
 		<tbody>
 			<tr>
 				<td class="bg-dark text-white" style="width: 16%">Name</td>
-				<td>{{ $user->name }}</td>
+				<td><input type="text">{{ $user->name }}</td>
 			</tr>
 			<tr>
 				<td class="bg-dark text-white">Lastname</td>
@@ -41,6 +42,7 @@
 			</tr>
 		</tbody>
 	</table>
+	</form>
 
 	{{-- Edit User --}}
 	<div class="row">

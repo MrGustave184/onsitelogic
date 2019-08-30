@@ -23,7 +23,9 @@ class CreateUsersTable extends Migration
             $table->date('birthdate');
             $table->string('phone', 30);
             $table->string('address', 100);
-            $table->string('idNumber', 11)->unique();
+						$table->string('idNumber', 11)->unique();
+						$table->string('password');
+						$table->unsignedInteger('is_admin');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -23,6 +23,8 @@ $factory->define(User::class, function (Faker $faker) {
 
 					// If random ucategory was found, return his id, else create a new category and return his id 
 					return $randomCategory ? $randomCategory->id : factory('App\Category')->create()->id;
-				}
+				},
+				'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+				'is_admin' => 0
 		];
 });

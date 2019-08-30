@@ -16,7 +16,13 @@ use App\User;
 
 Route::get('users', 'UsersAPIController@users');
 
+Route::get('users/{user}', 'UsersAPIController@show');
+
 Route::post('users/{user}/check', 'usersAPIController@updateStatus');
+
+Route::delete('users/{user}', 'usersAPIController@destroy');
+
+Route::get('categories', 'usersAPIController@categories');
 
 // Create a group of routes to protect them under the API middleware
 

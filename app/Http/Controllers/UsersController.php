@@ -46,8 +46,8 @@ class UsersController extends Controller
 			$this->validate($request, [
 				'name' 				=> 'required',
 				'lastname' 		=> 'required',
-				'idNumber' 		=> 'required|alpha_dash|starts_with:V-,E-', 
-				'email' 			=> 'email',
+				'idNumber' 		=> 'required|alpha_dash|unique:users|starts_with:V-,E-', // Do not exists
+				'email' 			=> 'email|unique:users',	// Do not exists
 				'birthdate' 	=> 'date|required',
 				'category_id'	=> 'required|integer|exists:categories,id'
 			]);

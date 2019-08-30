@@ -22,9 +22,9 @@
 				<li class="nav-item {{ Request::is('users') ? 'active' : '' }}">
 					<a class="nav-link" href="/users">All Users <span class="sr-only"></span></a>
 				</li>
-
-				<li class="nav-item">
 					{{-- Categories Dropdown --}}
+				{{-- <li class="nav-item">
+
 						<div class="dropdown">
 							<a class="nav-link dropdown-toggle {{ Request::is('categories/*') ? 'active' : '' }}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown">
 								Categories
@@ -35,11 +35,15 @@
 								@endforeach
 							</div>
 						</div>
-					{{-- /Categories Dropdown --}}
-				</li>
+
+				</li> --}}
+				{{-- /Categories Dropdown --}}
 						
 				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
 					<a class="nav-link" href="/users/create">Register <span class="sr-only"></span></a>
+				</li>
+				<li class="nav-item {{ Request::is('login') ? 'active' : '' }}">
+					<a class="nav-link" href="/login">Login<span class="sr-only"></span></a>
 				</li>
 			</ul>
 			

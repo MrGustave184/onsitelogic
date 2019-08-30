@@ -30,4 +30,19 @@ class CreateUsersTest extends TestCase
 				'email' 		=> $user->email,
 			]);
 	}
+
+	/** @test */
+	public function admin_can_delete_users()
+	{
+		// $this->withoutExceptionHandling(); 
+
+		$user = factory('App\User')->create();
+
+		$this->delete('/api/users/' . $user->id);
+
+		$this->assertDatabaseDontHas('users', [
+			'idNumber'	=> $user->idNumber,
+			'email' 		=> $user->email,
+		]);
+	}
 }
