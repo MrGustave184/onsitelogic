@@ -1881,6 +1881,8 @@ __webpack_require__.r(__webpack_exports__);
     search: function search() {
       var _this = this;
 
+      this.filter = null;
+      this.filterCategory = null;
       axios.get('api/search', {
         params: {
           keywords: this.keywords
@@ -1889,6 +1891,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response.data);
         _this.list = response.data;
       })["catch"](function (error) {});
+      return;
     },
 
     /**
@@ -1959,6 +1962,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     filterUsers: function filterUsers(type, filter) {
+      this.keywords = null;
       if (type == 'filter') this.filter = filter;
       if (type == 'category') this.filterCategory = filter;
       this.fetchUsers();
@@ -39397,6 +39401,12 @@ var render = function() {
             value: _vm.keywords,
             expression: "keywords",
             modifiers: { lazy: true }
+          },
+          {
+            name: "debounce",
+            rawName: "v-debounce",
+            value: 500,
+            expression: "500"
           }
         ],
         staticClass: "form-control",
@@ -51875,7 +51885,30 @@ files.keys().map(function (key) {
   return Vue.component(key.split('/').pop().split('.')[0], files(key)["default"]);
 });
 Vue.component('users-component', __webpack_require__(/*! ./components/UsersComponent.vue */ "./resources/js/components/UsersComponent.vue")["default"]);
-Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js"));
+Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js")); // Register debounce directive
+
+function debounce(fn) {
+  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var timeoutID = null;
+  return function () {
+    clearTimeout(timeoutID);
+    var args = arguments;
+    var that = this;
+    timeoutID = setTimeout(function () {
+      fn.apply(that, args);
+    }, delay);
+  };
+}
+
+;
+Vue.directive('debounce', function (el, binding) {
+  if (binding.value !== binding.oldValue) {
+    // window.debounce is our global function what we defined at the very top!
+    el.oninput = debounce(function (ev) {
+      el.dispatchEvent(new Event('change'));
+    }, parseInt(binding.value) || 300);
+  }
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -93,11 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-console.log('mix is working');
-var participantes = $('#participantes');
-participantes.on('click', '#asistente', function (element) {
-  $(element.target).text('asistente');
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nError: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\onsitelogic\\resources\\js\\main.js'");
 
 /***/ }),
 

@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+
 let axios = require('axios');
 
 window.Vue = require('vue');
@@ -23,6 +24,31 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 Vue.component('users-component', require('./components/UsersComponent.vue').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
+
+// Register debounce directive
+function debounce(fn, delay = 300) {
+	var timeoutID = null;
+
+	return function () {
+		clearTimeout(timeoutID);
+
+		var args = arguments;
+		var that = this;
+
+		timeoutID = setTimeout(function () {
+			fn.apply(that, args);
+		}, delay);
+	}
+};
+
+Vue.directive('debounce', (el, binding) => {
+	if (binding.value !== binding.oldValue) {
+		// window.debounce is our global function what we defined at the very top!
+		el.oninput = debounce(ev => {
+			el.dispatchEvent(new Event('change'));
+		}, parseInt(binding.value) || 300);
+	}
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

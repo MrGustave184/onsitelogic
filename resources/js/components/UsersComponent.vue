@@ -4,7 +4,7 @@
 		<div class="row filters form-inline">
 		<a class="btn btn-secondary filter-button text-white" @click="clearFilters('search')">Clear</a>
 			<a class="btn btn-secondary filter-button text-white" :class="{'btn-info':keywords}">Search</a>
-			<input v-model.lazy="keywords" class="form-control" type="text" placeholder="Enter a keyword and press enter..." aria-label="Search">
+			<input v-model.lazy="keywords" v-debounce="500" class="form-control" type="text" placeholder="Enter a keyword and press enter..." aria-label="Search">
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Filters: </h5>
@@ -95,12 +95,17 @@
 
 		methods: {
 			search: function() {
+				this.filter = null;
+				this.filterCategory = null;
+
 				axios.get('api/search', { params: { keywords: this.keywords } })
 					.then((response) => {
 						console.log(response.data);
 						this.list = response.data;
 					})
 					.catch(error => {});
+
+				return;
 			},
 			/**
 			 * Fetch all users
@@ -175,6 +180,7 @@
 			},
 
 			filterUsers: function (type, filter) {
+				this.keywords = null;
 				if(type == 'filter') this.filter = filter; 
 				if(type == 'category') this.filterCategory = filter; 
 
