@@ -1881,14 +1881,14 @@ __webpack_require__.r(__webpack_exports__);
     search: function search() {
       var _this = this;
 
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       this.filter = null;
       this.filterCategory = null;
-      axios.get('api/search', {
+      axios.get('api/users?page=' + page, {
         params: {
           keywords: this.keywords
         }
       }).then(function (response) {
-        console.log(response.data);
         _this.list = response.data;
       })["catch"](function (error) {});
       return;
@@ -1904,7 +1904,11 @@ __webpack_require__.r(__webpack_exports__);
       var requestRoute = 'api/users?page=' + page;
       if (this.filter) requestRoute += '&filter=' + this.filter;
       if (this.filterCategory) requestRoute += '&category=' + this.filterCategory;
-      axios.get(requestRoute).then(function (response) {
+      axios.get(requestRoute, {
+        params: {
+          keywords: this.keywords
+        }
+      }).then(function (response) {
         console.log('fetching all users...');
         _this2.list = response.data;
       })["catch"](function (error) {
@@ -1955,19 +1959,18 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.get('api/categories').then(function (response) {
-        console.log(response);
         _this4.categories = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     filterUsers: function filterUsers(type, filter) {
-      this.keywords = null;
       if (type == 'filter') this.filter = filter;
       if (type == 'category') this.filterCategory = filter;
       this.fetchUsers();
     },
     clearFilters: function clearFilters(item) {
+      // I can use a variable variable here!
       if (item == 'filter') this.filter = null;
       if (item == 'category') this.filterCategory = null;
       if (item == 'search') this.keywords = null;
@@ -39386,10 +39389,15 @@ var render = function() {
       _vm._v(" "),
       _c(
         "a",
-        {
-          staticClass: "btn btn-secondary filter-button text-white",
-          class: { "btn-info": _vm.keywords }
-        },
+        _vm._b(
+          {
+            staticClass: "btn btn-secondary filter-button text-white",
+            class: { "btn-info": _vm.keywords }
+          },
+          "a",
+          _vm.keywords,
+          false
+        ),
         [_vm._v("Search")]
       ),
       _vm._v(" "),
@@ -39412,7 +39420,7 @@ var render = function() {
         staticClass: "form-control",
         attrs: {
           type: "text",
-          placeholder: "Enter a keyword and press enter...",
+          placeholder: "Keyword or ID",
           "aria-label": "Search"
         },
         domProps: { value: _vm.keywords },
@@ -39442,29 +39450,39 @@ var render = function() {
       _vm._v(" "),
       _c(
         "a",
-        {
-          staticClass: "btn btn-sm btn-secondary filter-button text-white",
-          class: { "btn-info": _vm.filter == "checkedIn" },
-          on: {
-            click: function($event) {
-              return _vm.filterUsers("filter", "checkedIn")
+        _vm._b(
+          {
+            staticClass: "btn btn-sm btn-secondary filter-button text-white",
+            class: { "btn-info": _vm.filter == "checkedIn" },
+            on: {
+              click: function($event) {
+                return _vm.filterUsers("filter", "checkedIn")
+              }
             }
-          }
-        },
+          },
+          "a",
+          _vm.filter,
+          false
+        ),
         [_vm._v("Checked in")]
       ),
       _vm._v(" "),
       _c(
         "a",
-        {
-          staticClass: "btn btn-sm btn-secondary filter-button text-white",
-          class: { "btn-info": _vm.filter == "notCheckedIn" },
-          on: {
-            click: function($event) {
-              return _vm.filterUsers("filter", "notCheckedIn")
+        _vm._b(
+          {
+            staticClass: "btn btn-sm btn-secondary filter-button text-white",
+            class: { "btn-info": _vm.filter == "notCheckedIn" },
+            on: {
+              click: function($event) {
+                return _vm.filterUsers("filter", "notCheckedIn")
+              }
             }
-          }
-        },
+          },
+          "a",
+          _vm.filter,
+          false
+        ),
         [_vm._v("Not Checked in")]
       )
     ]),

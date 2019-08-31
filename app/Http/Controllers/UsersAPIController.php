@@ -8,18 +8,21 @@ use App\Category;
 
 class UsersAPIController extends Controller
 {
-		// Filters array
+		// Available filters
 		protected $filters = ['checkedIn', 'notCheckedIn'];
 
-		// Fetch all users
+		/**
+		* Fetch all users
+		*/
 		public function users(Request $request)
 		{
-			$users = \DB::table('users')
-				->join('categories', 'users.category_id', '=', 'categories.id')
-				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
+			// Build basic query
+			$users = $this->buildQuery();
 
-			$filter = $request->filter;
-			$category = $request->category;
+			// Validate/sanitize and apply filters if any
+			if($request->filter)		$filter 	= filter_var($request->filter, FILTER_SANITIZE_STRIPPED);
+			if($request->category)	$category = filter_var($request->category, FILTER_VALIDATE_INT);
+			if($request->keywords)	$keywords = filter_var($request->keywords, FILTER_SANITIZE_STRIPPED);
 
 			if($filter && in_array($filter, $this->filters)) {
 				$users = $this->$filter($users);
@@ -28,7 +31,12 @@ class UsersAPIController extends Controller
 			if($category && $this->categoryExists($category)) {
 				$users = $this->byCategory($users, $category);
 			}
+
+			if($keywords) {
+				$users = $this->applyKeywords($users, $keywords);
+			}
 			
+			// Return results
 			return $users->orderBy('users.created_at', 'desc')->paginate(15);
 		}
 
@@ -44,7 +52,7 @@ class UsersAPIController extends Controller
 		{
 			$user->delete();
 
-			return 'User Deleted...';
+			return response(200);
 		}
 
 		public function categories()
@@ -61,23 +69,6 @@ class UsersAPIController extends Controller
 			$user->update(['status' => $status]);
 
 			return $user->status;
-		}
-
-		public function search(Request $request)
-		{
-			$keywords = $request->keywords;
-
-			$query = \DB::table('users')
-				->join('categories', 'users.category_id', '=', 'categories.id')
-				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
-
-			$users = $query
-				->where('users.name', 'like', '%'.$keywords.'%')
-				->orWhere('users.lastname', 'like', '%'.$keywords.'%')
-				->orWhere('users.email', 'like', '%'.$keywords.'%')
-				->orWhere('users.idNumber', 'like', '%'.$keywords.'%');
-
-			return $users->orderBy('users.created_at', 'desc')->paginate(15);
 		}
 
 		/**
@@ -97,5 +88,22 @@ class UsersAPIController extends Controller
 
 		private function categoryExists($id) {
 			return Category::where('id', $id)->exists();
+		}
+
+		private function applyKeywords($builder, $keywords) {
+			$builder->where('users.name', 'like', '%'.$keywords.'%')
+				->orWhere('users.lastname', 'like', '%'.$keywords.'%')
+				->orWhere('users.email', 'like', '%'.$keywords.'%')
+				->orWhere('users.idNumber', 'like', '%'.$keywords.'%');
+			
+				return $builder;
+		}
+
+		private function buildQuery() {
+			$query = \DB::table('users')
+				->join('categories', 'users.category_id', '=', 'categories.id')
+				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
+
+			return $query;
 		}
 }

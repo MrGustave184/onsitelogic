@@ -3,14 +3,14 @@
 		<!-- Filters -->
 		<div class="row filters form-inline">
 		<a class="btn btn-secondary filter-button text-white" @click="clearFilters('search')">Clear</a>
-			<a class="btn btn-secondary filter-button text-white" :class="{'btn-info':keywords}">Search</a>
-			<input v-model.lazy="keywords" v-debounce="500" class="form-control" type="text" placeholder="Enter a keyword and press enter..." aria-label="Search">
+			<a v-bind="keywords" class="btn btn-secondary filter-button text-white" :class="{'btn-info':keywords}">Search</a>
+			<input v-model.lazy="keywords" v-debounce="500" class="form-control" type="text" placeholder="Keyword or ID" aria-label="Search">
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Filters: </h5>
 			<a class="btn btn-secondary btn-sm filter-button text-white" @click="clearFilters('filter')">Clear</a>
-			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'checkedIn'}" @click="filterUsers('filter', 'checkedIn')" >Checked in</a>
-			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'notCheckedIn'}"  @click="filterUsers('filter', 'notCheckedIn')" >Not Checked in</a>
+			<a v-bind="filter" class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'checkedIn'}" @click="filterUsers('filter', 'checkedIn')" >Checked in</a>
+			<a v-bind="filter" class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'notCheckedIn'}"  @click="filterUsers('filter', 'notCheckedIn')" >Not Checked in</a>
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Categories: </h5>
@@ -94,19 +94,22 @@
 		},
 
 		methods: {
-			search: function() {
+			search: function(page = 1) {
 				this.filter = null;
 				this.filterCategory = null;
 
-				axios.get('api/search', { params: { keywords: this.keywords } })
+				axios.get('api/users?page=' + page, { 
+					params: { 
+						keywords: this.keywords 
+					} })
 					.then((response) => {
-						console.log(response.data);
 						this.list = response.data;
 					})
 					.catch(error => {});
 
 				return;
 			},
+
 			/**
 			 * Fetch all users
 			 */
@@ -116,7 +119,10 @@
 				if(this.filter) requestRoute += '&filter=' + this.filter;
 				if(this.filterCategory) requestRoute += '&category=' + this.filterCategory;
 
-				axios.get(requestRoute)
+				axios.get(requestRoute, {
+						params: {
+							keywords: this.keywords
+						}})
 					.then((response) => {
 						console.log('fetching all users...');
 						this.list = response.data;
@@ -172,7 +178,6 @@
 			fetchCategories: function () {
 				axios.get('api/categories')
 					.then((response) => {
-						console.log(response);
 						this.categories = response.data;
 					}).catch((error) => {
 						console.log(error);
@@ -180,7 +185,7 @@
 			},
 
 			filterUsers: function (type, filter) {
-				this.keywords = null;
+
 				if(type == 'filter') this.filter = filter; 
 				if(type == 'category') this.filterCategory = filter; 
 
@@ -188,12 +193,13 @@
 			},
 
 			clearFilters: function (item) {
-				if(item == 'filter') this.filter = null;
-				if(item == 'category') this.filterCategory = null;
-				if(item == 'search') this.keywords = null;
+				// I can use a variable variable here!
+				if(item == 'filter') 		this.filter = null;
+				if(item == 'category') 	this.filterCategory = null;
+				if(item == 'search') 		this.keywords = null;
 
 				this.fetchUsers();
-			}
+			},
 		},
 
 		watch: {
