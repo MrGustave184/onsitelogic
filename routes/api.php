@@ -24,6 +24,8 @@ Route::delete('users/{user}', 'usersAPIController@destroy');
 
 Route::get('categories', 'usersAPIController@categories');
 
+Route::get('search', 'usersAPIController@search');
+
 // Create a group of routes to protect them under the API middleware
 
 // I still need to remove this logic from the api routes. Same user controller or dedicated api controller?

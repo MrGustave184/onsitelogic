@@ -61,6 +61,8 @@ class UsersController extends Controller
 				'address' 		=> $request->input('address'),
 				'birthdate' 	=> $request->input('birthdate'),
 				'category_id' => $request->input('category_id'),
+				'password'		=> 'password', // I NEED TO ADD LOGIN FUNCTIONALITY
+				'is_admin'		=> 0,
 				'status' 			=> 'inasistente' // As default in the db?
 			]);
 

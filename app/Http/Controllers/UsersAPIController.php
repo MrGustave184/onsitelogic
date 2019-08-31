@@ -9,7 +9,7 @@ use App\Category;
 class UsersAPIController extends Controller
 {
 		// Filters array
-		protected $filters = ['CheckedIn', 'notChekedIn'];
+		protected $filters = ['checkedIn', 'notCheckedIn'];
 
 		// Fetch all users
 		public function users(Request $request)
@@ -18,14 +18,14 @@ class UsersAPIController extends Controller
 				->join('categories', 'users.category_id', '=', 'categories.id')
 				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
 
-			$filter = request('filter');
-			$category = request('category');
+			$filter = $request->filter;
+			$category = $request->category;
 
-			if($filter) {
+			if($filter && in_array($filter, $this->filters)) {
 				$users = $this->$filter($users);
 			}
 
-			if($category) {
+			if($category && $this->categoryExists($category)) {
 				$users = $this->byCategory($users, $category);
 			}
 			
@@ -63,6 +63,26 @@ class UsersAPIController extends Controller
 			return $user->status;
 		}
 
+		public function search(Request $request)
+		{
+			$keywords = $request->keywords;
+
+			$query = \DB::table('users')
+				->join('categories', 'users.category_id', '=', 'categories.id')
+				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
+
+			$users = $query
+				->where('users.name', 'like', '%'.$keywords.'%')
+				->orWhere('users.lastname', 'like', '%'.$keywords.'%')
+				->orWhere('users.email', 'like', '%'.$keywords.'%')
+				->orWhere('users.idNumber', 'like', '%'.$keywords.'%');
+
+			return $users->orderBy('users.created_at', 'desc')->paginate(15);
+		}
+
+		/**
+		* Filters
+		*/
 		private function checkedIn($builder) {
 			return $builder->where('users.status', 'asistente');
 		}
@@ -73,5 +93,9 @@ class UsersAPIController extends Controller
 
 		private function byCategory($builder, $category) {
 			return $builder->where('users.category_id', $category);
+		}
+
+		private function categoryExists($id) {
+			return Category::where('id', $id)->exists();
 		}
 }

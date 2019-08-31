@@ -22,23 +22,6 @@
 				<li class="nav-item {{ Request::is('users') ? 'active' : '' }}">
 					<a class="nav-link" href="/users">All Users <span class="sr-only"></span></a>
 				</li>
-					{{-- Categories Dropdown --}}
-				{{-- <li class="nav-item">
-
-						<div class="dropdown">
-							<a class="nav-link dropdown-toggle {{ Request::is('categories/*') ? 'active' : '' }}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown">
-								Categories
-							</a>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-								@foreach($categories as $category)
-								<a class="dropdown-item" href="/categories/{{ $category->id }}">{{ $category->name }}</a>
-								@endforeach
-							</div>
-						</div>
-
-				</li> --}}
-				{{-- /Categories Dropdown --}}
-						
 				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
 					<a class="nav-link" href="/users/create">Register <span class="sr-only"></span></a>
 				</li>

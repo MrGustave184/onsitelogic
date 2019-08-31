@@ -1851,15 +1851,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       list: {},
-      // Filtersarray goes here!!!!
-      // The filter property will hold the current filter
-      filter: '',
-      filterCategory: '',
       categories: [],
+      filter: null,
+      filterCategory: null,
+      keywords: null,
       user: {
         id: '',
         name: '',
@@ -1876,11 +1878,24 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchCategories();
   },
   methods: {
+    search: function search() {
+      var _this = this;
+
+      axios.get('api/search', {
+        params: {
+          keywords: this.keywords
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        _this.list = response.data;
+      })["catch"](function (error) {});
+    },
+
     /**
      * Fetch all users
      */
     fetchUsers: function fetchUsers() {
-      var _this = this;
+      var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       var requestRoute = 'api/users?page=' + page;
@@ -1888,19 +1903,11 @@ __webpack_require__.r(__webpack_exports__);
       if (this.filterCategory) requestRoute += '&category=' + this.filterCategory;
       axios.get(requestRoute).then(function (response) {
         console.log('fetching all users...');
-        _this.list = response.data;
+        _this2.list = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
       return;
-    },
-
-    /**
-     * Filter users
-     */
-    filterUsers: function filterUsers(filter) {
-      this.filter = filter;
-      this.fetchUsers();
     },
 
     /**
@@ -1925,52 +1932,49 @@ __webpack_require__.r(__webpack_exports__);
      * Delete User
      */
     deleteUser: function deleteUser(user) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!confirm("Do you really want to delete this user?")) return;
       axios["delete"]('api/users/' + user.id).then(function (response) {
         console.log(response);
 
-        _this2.fetchUsers();
+        _this3.fetchUsers();
       })["catch"](function (error) {
         console.log(error);
       });
       return;
     },
-    // fetchCategories
+
+    /**
+     * Fetch Categories
+     */
     fetchCategories: function fetchCategories() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get('api/categories').then(function (response) {
         console.log(response);
-        _this3.categories = response.data;
+        _this4.categories = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    singleCategory: function singleCategory(category) {
-      this.filterCategory = category;
+    filterUsers: function filterUsers(type, filter) {
+      if (type == 'filter') this.filter = filter;
+      if (type == 'category') this.filterCategory = filter;
       this.fetchUsers();
     },
-    clearFilter: function clearFilter() {
-      this.filter = '';
-      this.fetchUsers();
-    },
-    clearCategory: function clearCategory() {
-      this.filterCategory = '';
+    clearFilters: function clearFilters(item) {
+      if (item == 'filter') this.filter = null;
+      if (item == 'category') this.filterCategory = null;
+      if (item == 'search') this.keywords = null;
       this.fetchUsers();
     }
-  } // computed: {
-  // 	categories: () => {
-  // 		 axios.get('api/categories')
-  // 			.then((response) => {
-  // 				this.categories = response.data;
-  // 			}).catch((error) => {
-  // 				console.log(error);
-  // 			});
-  // 	}
-  // }
-
+  },
+  watch: {
+    keywords: function keywords(after, before) {
+      this.search();
+    }
+  }
 });
 
 /***/ }),
@@ -6451,7 +6455,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.title {\n\tmargin-bottom: 40px;\n}\n.actionButton {\n\tmargin-left: 5px;\n\tcursor: pointer;\n}\n.filters {\n\tmargin: 20px 10px;\n}\n.filter-title {\n\tmin-width: 100px;\n}\n.filter-button {\n\tmargin: 0 2px 0px 2px;\n}\n.debug {\n\tborder: 1px solid black\n}\n", ""]);
+exports.push([module.i, "\n.actionButton {\n\tmargin-left: 5px;\n\tcursor: pointer;\n}\n.filters {\n\tmargin: 20px 10px;\n}\n.filter-title {\n\tmin-width: 100px;\n}\n.filter-button {\n\tmargin: 0 2px 0px 2px;\n}\n.debug {\n\tborder: 1px solid black\n}\n", ""]);
 
 // exports
 
@@ -39362,6 +39366,54 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { staticClass: "row filters form-inline" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-secondary filter-button text-white",
+          on: {
+            click: function($event) {
+              return _vm.clearFilters("search")
+            }
+          }
+        },
+        [_vm._v("Clear")]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-secondary filter-button text-white",
+          class: { "btn-info": _vm.keywords }
+        },
+        [_vm._v("Search")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model.lazy",
+            value: _vm.keywords,
+            expression: "keywords",
+            modifiers: { lazy: true }
+          }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          placeholder: "Enter a keyword and press enter...",
+          "aria-label": "Search"
+        },
+        domProps: { value: _vm.keywords },
+        on: {
+          change: function($event) {
+            _vm.keywords = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "row filters" }, [
       _c("h5", { staticClass: "filter-title" }, [_vm._v("Filters: ")]),
       _vm._v(" "),
@@ -39371,7 +39423,7 @@ var render = function() {
           staticClass: "btn btn-secondary btn-sm filter-button text-white",
           on: {
             click: function($event) {
-              return _vm.clearFilter()
+              return _vm.clearFilters("filter")
             }
           }
         },
@@ -39385,7 +39437,7 @@ var render = function() {
           class: { "btn-info": _vm.filter == "checkedIn" },
           on: {
             click: function($event) {
-              return _vm.filterUsers("checkedIn")
+              return _vm.filterUsers("filter", "checkedIn")
             }
           }
         },
@@ -39399,7 +39451,7 @@ var render = function() {
           class: { "btn-info": _vm.filter == "notCheckedIn" },
           on: {
             click: function($event) {
-              return _vm.filterUsers("notCheckedIn")
+              return _vm.filterUsers("filter", "notCheckedIn")
             }
           }
         },
@@ -39417,7 +39469,11 @@ var render = function() {
           "a",
           {
             staticClass: "btn btn-secondary btn-sm filter-button text-white",
-            on: { click: _vm.clearCategory }
+            on: {
+              click: function($event) {
+                return _vm.clearFilters("category")
+              }
+            }
           },
           [_vm._v("Clear")]
         ),
@@ -39432,7 +39488,7 @@ var render = function() {
                 class: { "btn-info": _vm.filterCategory == category.id },
                 on: {
                   click: function($event) {
-                    return _vm.singleCategory(category.id)
+                    return _vm.filterUsers("category", category.id)
                   }
                 }
               },
@@ -39497,9 +39553,7 @@ var render = function() {
                     height: "24"
                   }
                 }),
-                _vm._v(
-                  "\n\t\t\t\t\t\t" + _vm._s(user.status) + "\n\t\t\t\t\t\t"
-                )
+                _vm._v("\n\t\t\t\t\t" + _vm._s(user.status) + "\n\t\t\t\t\t")
               ]),
               _vm._v(" "),
               _c("td", { staticClass: "row" }, [
