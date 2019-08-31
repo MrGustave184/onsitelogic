@@ -1965,6 +1965,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     filterUsers: function filterUsers(type, filter) {
+      this.keywords = null;
       if (type == 'filter') this.filter = filter;
       if (type == 'category') this.filterCategory = filter;
       this.fetchUsers();
@@ -39537,7 +39538,11 @@ var render = function() {
         _vm._l(_vm.list.data, function(user) {
           return _c("tbody", { key: user.id }, [
             _c("tr", [
-              _c("td", [_vm._v(_vm._s(user.name))]),
+              _c("td", [
+                _c("a", { attrs: { href: "/users/" + user.id } }, [
+                  _vm._v(_vm._s(user.name))
+                ])
+              ]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(user.lastname))]),
               _vm._v(" "),

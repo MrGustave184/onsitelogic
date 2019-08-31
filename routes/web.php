@@ -14,14 +14,16 @@
 Route::get('/', function () {
 	$root = auth()->check() ? '/users' : '/login';
 
-	return redirect($root);
+	// redirect($root) to activate the authentication system
+	return redirect('/users');
 });
 
 Route::resource('/users', 'UsersController');
 
+Route::post('/users/{user}/check', 'UsersController@updateStatus');
+
 // Categories
 Route::get('/categories/{category}', 'CategoriesController@index'); // Make resourceful later!
-
 
 Auth::routes();
 

@@ -46,9 +46,9 @@ class UsersController extends Controller
 			$this->validate($request, [
 				'name' 				=> 'required',
 				'lastname' 		=> 'required',
-				'idNumber' 		=> 'required|alpha_dash|unique:users|starts_with:V-,E-', // Do not exists
-				'email' 			=> 'email|unique:users',	// Do not exists
-				'birthdate' 	=> 'date|required',
+				'idNumber' 		=> 'required|alpha_dash|unique:users|starts_with:V-,E-',
+				'email' 			=> 'email|unique:users',
+				'birthdate' 	=> 'date|required|before:today',
 				'category_id'	=> 'required|integer|exists:categories,id'
 			]);
 
@@ -126,5 +126,14 @@ class UsersController extends Controller
 				$user->delete();
 
 				return redirect('/users')->with('success', 'User Deleted');
-    }
+		}
+		
+		public function updateStatus(User $user)
+		{
+			$status = $user->status == 'asistente' ? 'inasistente' : 'asistente';
+
+			$user->update(['status' => $status]);
+
+			return redirect('/users')->with('success', 'User Updated');
+		}
 }

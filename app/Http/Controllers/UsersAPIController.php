@@ -20,9 +20,9 @@ class UsersAPIController extends Controller
 			$users = $this->buildQuery();
 
 			// Validate/sanitize and apply filters if any
-			if($request->filter)		$filter 	= filter_var($request->filter, FILTER_SANITIZE_STRIPPED);
-			if($request->category)	$category = filter_var($request->category, FILTER_VALIDATE_INT);
-			if($request->keywords)	$keywords = filter_var($request->keywords, FILTER_SANITIZE_STRIPPED);
+			$filter 	= $request->filter 		? filter_var($request->filter, FILTER_SANITIZE_STRIPPED) : '';
+			$category = $request->category 	? filter_var($request->category, FILTER_VALIDATE_INT) : '';
+			$keywords = $request->keywords 	? filter_var($request->keywords, FILTER_SANITIZE_STRIPPED) : '';
 
 			if($filter && in_array($filter, $this->filters)) {
 				$users = $this->$filter($users);
@@ -35,7 +35,7 @@ class UsersAPIController extends Controller
 			if($keywords) {
 				$users = $this->applyKeywords($users, $keywords);
 			}
-			
+
 			// Return results
 			return $users->orderBy('users.created_at', 'desc')->paginate(15);
 		}
@@ -52,7 +52,7 @@ class UsersAPIController extends Controller
 		{
 			$user->delete();
 
-			return response(200);
+			return 'User deleted...';
 		}
 
 		public function categories()
@@ -86,10 +86,6 @@ class UsersAPIController extends Controller
 			return $builder->where('users.category_id', $category);
 		}
 
-		private function categoryExists($id) {
-			return Category::where('id', $id)->exists();
-		}
-
 		private function applyKeywords($builder, $keywords) {
 			$builder->where('users.name', 'like', '%'.$keywords.'%')
 				->orWhere('users.lastname', 'like', '%'.$keywords.'%')
@@ -97,6 +93,14 @@ class UsersAPIController extends Controller
 				->orWhere('users.idNumber', 'like', '%'.$keywords.'%');
 			
 				return $builder;
+		}
+
+		/**
+		* Helpers
+		*/
+
+		private function categoryExists($id) {
+			return Category::where('id', $id)->exists();
 		}
 
 		private function buildQuery() {

@@ -34,7 +34,7 @@
 			</thead>
 			<tbody v-for="user in list.data" v-bind:key="user.id">
 				<tr>
-					<td>{{ user.name }}</td>
+					<td><a v-bind:href="'/users/' + user.id">{{ user.name }}</a></td>
 					<td>{{ user.lastname }}</td>
 					<td>{{ user.email }}</td>
 					<td>{{ user.category }}</td>
@@ -185,6 +185,7 @@
 			},
 
 			filterUsers: function (type, filter) {
+				this.keywords = null
 
 				if(type == 'filter') this.filter = filter; 
 				if(type == 'category') this.filterCategory = filter; 
