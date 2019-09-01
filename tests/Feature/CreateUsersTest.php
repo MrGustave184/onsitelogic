@@ -40,7 +40,7 @@ class CreateUsersTest extends TestCase
 
 		$this->delete('/api/users/' . $user->id);
 
-		$this->assertDatabaseDontHas('users', [
+		$this->assertDatabaseMissing('users', [
 			'idNumber'	=> $user->idNumber,
 			'email' 		=> $user->email,
 		]);

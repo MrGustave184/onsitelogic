@@ -40,13 +40,13 @@ class UsersAPIController extends Controller
 			return $users->orderBy('users.created_at', 'desc')->paginate(15);
 		}
 
-			/**
-			*	Return single user
-			*/
-			public function show(User $user)
-			{
-				return $user;
-			}
+		/**
+		*	Return single user
+		*/
+		public function show(User $user)
+		{
+			return $user;
+		}
 
 		public function destroy(User $user)
 		{
@@ -92,7 +92,7 @@ class UsersAPIController extends Controller
 				->orWhere('users.email', 'like', '%'.$keywords.'%')
 				->orWhere('users.idNumber', 'like', '%'.$keywords.'%');
 			
-				return $builder;
+			return $builder;
 		}
 
 		/**

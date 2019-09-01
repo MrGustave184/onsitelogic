@@ -127,7 +127,13 @@ class UsersController extends Controller
 
 				return redirect('/users')->with('success', 'User Deleted');
 		}
-		
+
+		/**
+     * Update user status 
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 		public function updateStatus(User $user)
 		{
 			$status = $user->status == 'asistente' ? 'inasistente' : 'asistente';
