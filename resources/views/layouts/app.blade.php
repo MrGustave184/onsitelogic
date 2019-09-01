@@ -12,7 +12,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-		<a class="navbar-brand" href="/users">Onsitelogic</a>
+		<a class="navbar-brand" href="{{ \URL::to('/') }}">Onsitelogic</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -20,14 +20,15 @@
 		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item {{ Request::is('users') ? 'active' : '' }}">
-					<a class="nav-link" href="/users">All Users <span class="sr-only"></span></a>
+					<a class="nav-link" href="{{ \URL::to('/users') }}">All Users <span class="sr-only"></span></a>
 				</li>
 				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
 					<a class="nav-link" href="/users/create">Register <span class="sr-only"></span></a>
 				</li>
-				<li class="nav-item {{ Request::is('login') ? 'active' : '' }}">
-					<a class="nav-link" href="/login">Login<span class="sr-only"></span></a>
-				</li>
+				{{-- Login --}}
+				{{-- <li class="nav-item {{ Request::is('login') ? 'active' : '' }}">
+					<a class="nav-link" href="{{ \URL::to('/login') }}">Login<span class="sr-only"></span></a>
+				</li> --}}
 			</ul>
 		</div>
 	</nav>
