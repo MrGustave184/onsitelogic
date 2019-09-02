@@ -3,20 +3,20 @@
 		<!-- Filters -->
 		<div class="row filters form-inline">
 		<a class="btn btn-secondary filter-button text-white" @click="clearFilters('search')">Clear</a>
-			<a v-bind="keywords" class="btn btn-secondary filter-button text-white" :class="{'btn-info':keywords}">Search</a>
+			<a class="btn btn-secondary filter-button text-white" :class="{'btn-info':keywords}">Search</a>
 			<input v-model.lazy="keywords" v-debounce="500" class="form-control" type="text" placeholder="Keyword or ID" aria-label="Search">
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Filters: </h5>
 			<a class="btn btn-secondary btn-sm filter-button text-white" @click="clearFilters('filter')">Clear</a>
-			<a v-bind="filter" class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'checkedIn'}" @click="filterUsers('filter', 'checkedIn')" >Checked in</a>
-			<a v-bind="filter" class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter == 'notCheckedIn'}"  @click="filterUsers('filter', 'notCheckedIn')" >Not Checked in</a>
+			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'checkedIn'}" @click="filterUsers('filter', 'checkedIn')" >Checked in</a>
+			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'notCheckedIn'}"  @click="filterUsers('filter', 'notCheckedIn')" >Not Checked in</a>
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Categories: </h5>
 			<a class="btn btn-secondary btn-sm filter-button text-white" @click="clearFilters('category')" >Clear</a>
 			<div v-for="category in categories" v-bind:key="category.id">
-				<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filterCategory == category.id}" @click="filterUsers('category', category.id)">{{ category.name}}</a>
+				<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.category == category.id}" @click="filterUsers('category', category.id)">{{ category.name}}</a>
 			</div>
 		</div>
 
@@ -73,8 +73,12 @@
 			return {
 				list: {},
 				categories: [],
-				filter: null,
-				filterCategory: null,
+				filter: {
+					status: '',
+					category: '',
+				},
+				// filter: null,
+				// filterCategory: null,
 				keywords: null,
 				user: {
 					id: '',
@@ -91,21 +95,22 @@
 			console.log('Users component mounted...');
 			this.fetchUsers();
 			this.fetchCategories();
+			console.log(this.keywords);
 		},
 
 		methods: {
 			search: function(page = 1) {
-				this.filter = null;
-				this.filterCategory = null;
+				this.filter.status = null;
+				this.filter.category= null;
 
 				axios.get('api/users?page=' + page, { 
 					params: { 
-						keywords: this.keywords 
+						keywords: this.keywords
 					} })
 					.then((response) => {
 						this.list = response.data;
 					})
-					.catch(error => {});
+					.catch(error => console.log(error));
 
 				return;
 			},
@@ -116,8 +121,8 @@
 			fetchUsers: function (page = 1) {
 				let requestRoute = 'api/users?page=' + page;
 				
-				if(this.filter) requestRoute += '&filter=' + this.filter;
-				if(this.filterCategory) requestRoute += '&category=' + this.filterCategory;
+				if(this.filter.status) requestRoute += '&filter=' + this.filter.status;
+				if(this.filter.category) requestRoute += '&category=' + this.filter.category;
 
 				axios.get(requestRoute, {
 						params: {
@@ -185,18 +190,18 @@
 			},
 
 			filterUsers: function (type, filter) {
-				this.keywords = null
+				this.keywords = null;
 
-				if(type == 'filter') this.filter = filter; 
-				if(type == 'category') this.filterCategory = filter; 
+				if(type == 'filter') this.filter.status = filter; 
+				if(type == 'category') this.filter.category = filter; 
 
 				this.fetchUsers();
 			},
 
 			clearFilters: function (item) {
 				// I can use a variable variable here!
-				if(item == 'filter') 		this.filter = null;
-				if(item == 'category') 	this.filterCategory = null;
+				if(item == 'filter') 		this.filter.status = null;
+				if(item == 'category') 	this.filter.category = null;
 				if(item == 'search') 		this.keywords = null;
 
 				this.fetchUsers();

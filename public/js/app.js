@@ -1859,8 +1859,12 @@ __webpack_require__.r(__webpack_exports__);
     return {
       list: {},
       categories: [],
-      filter: null,
-      filterCategory: null,
+      filter: {
+        status: '',
+        category: ''
+      },
+      // filter: null,
+      // filterCategory: null,
       keywords: null,
       user: {
         id: '',
@@ -1876,21 +1880,24 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Users component mounted...');
     this.fetchUsers();
     this.fetchCategories();
+    console.log(this.keywords);
   },
   methods: {
     search: function search() {
       var _this = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      this.filter = null;
-      this.filterCategory = null;
+      this.filter.status = null;
+      this.filter.category = null;
       axios.get('api/users?page=' + page, {
         params: {
           keywords: this.keywords
         }
       }).then(function (response) {
         _this.list = response.data;
-      })["catch"](function (error) {});
+      })["catch"](function (error) {
+        return console.log(error);
+      });
       return;
     },
 
@@ -1902,8 +1909,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       var requestRoute = 'api/users?page=' + page;
-      if (this.filter) requestRoute += '&filter=' + this.filter;
-      if (this.filterCategory) requestRoute += '&category=' + this.filterCategory;
+      if (this.filter.status) requestRoute += '&filter=' + this.filter.status;
+      if (this.filter.category) requestRoute += '&category=' + this.filter.category;
       axios.get(requestRoute, {
         params: {
           keywords: this.keywords
@@ -1966,14 +1973,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     filterUsers: function filterUsers(type, filter) {
       this.keywords = null;
-      if (type == 'filter') this.filter = filter;
-      if (type == 'category') this.filterCategory = filter;
+      if (type == 'filter') this.filter.status = filter;
+      if (type == 'category') this.filter.category = filter;
       this.fetchUsers();
     },
     clearFilters: function clearFilters(item) {
       // I can use a variable variable here!
-      if (item == 'filter') this.filter = null;
-      if (item == 'category') this.filterCategory = null;
+      if (item == 'filter') this.filter.status = null;
+      if (item == 'category') this.filter.category = null;
       if (item == 'search') this.keywords = null;
       this.fetchUsers();
     }
@@ -39390,15 +39397,10 @@ var render = function() {
       _vm._v(" "),
       _c(
         "a",
-        _vm._b(
-          {
-            staticClass: "btn btn-secondary filter-button text-white",
-            class: { "btn-info": _vm.keywords }
-          },
-          "a",
-          _vm.keywords,
-          false
-        ),
+        {
+          staticClass: "btn btn-secondary filter-button text-white",
+          class: { "btn-info": _vm.keywords }
+        },
         [_vm._v("Search")]
       ),
       _vm._v(" "),
@@ -39451,39 +39453,29 @@ var render = function() {
       _vm._v(" "),
       _c(
         "a",
-        _vm._b(
-          {
-            staticClass: "btn btn-sm btn-secondary filter-button text-white",
-            class: { "btn-info": _vm.filter == "checkedIn" },
-            on: {
-              click: function($event) {
-                return _vm.filterUsers("filter", "checkedIn")
-              }
+        {
+          staticClass: "btn btn-sm btn-secondary filter-button text-white",
+          class: { "btn-info": _vm.filter.status == "checkedIn" },
+          on: {
+            click: function($event) {
+              return _vm.filterUsers("filter", "checkedIn")
             }
-          },
-          "a",
-          _vm.filter,
-          false
-        ),
+          }
+        },
         [_vm._v("Checked in")]
       ),
       _vm._v(" "),
       _c(
         "a",
-        _vm._b(
-          {
-            staticClass: "btn btn-sm btn-secondary filter-button text-white",
-            class: { "btn-info": _vm.filter == "notCheckedIn" },
-            on: {
-              click: function($event) {
-                return _vm.filterUsers("filter", "notCheckedIn")
-              }
+        {
+          staticClass: "btn btn-sm btn-secondary filter-button text-white",
+          class: { "btn-info": _vm.filter.status == "notCheckedIn" },
+          on: {
+            click: function($event) {
+              return _vm.filterUsers("filter", "notCheckedIn")
             }
-          },
-          "a",
-          _vm.filter,
-          false
-        ),
+          }
+        },
         [_vm._v("Not Checked in")]
       )
     ]),
@@ -39514,7 +39506,7 @@ var render = function() {
               {
                 staticClass:
                   "btn btn-sm btn-secondary filter-button text-white",
-                class: { "btn-info": _vm.filterCategory == category.id },
+                class: { "btn-info": _vm.filter.category == category.id },
                 on: {
                   click: function($event) {
                     return _vm.filterUsers("category", category.id)
