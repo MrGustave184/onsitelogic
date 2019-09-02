@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="/css/app.css">
+	<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
 	{{-- CSRF token for axios --}}
 	<meta name="csrf-token" content="{{ csrf_token() }}">
@@ -23,7 +23,7 @@
 					<a class="nav-link" href="{{ \URL::to('/users') }}">All Users <span class="sr-only"></span></a>
 				</li>
 				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
-					<a class="nav-link" href="/users/create">Register <span class="sr-only"></span></a>
+					<a class="nav-link" href="{{ \URL::to('/users/create') }}">Register <span class="sr-only"></span></a>
 				</li>
 				{{-- Login --}}
 				{{-- <li class="nav-item {{ Request::is('login') ? 'active' : '' }}">

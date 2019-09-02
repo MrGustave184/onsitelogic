@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-	<form method="POST" action="/users">
+ <form method="POST" action="{{ \URL::to('/users') }}">
 		@csrf
 		
 		<div class="form-group">
 			<label for="name">Name: </label>
-		<input name="name" type="text" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" required>
+			<input name="name" type="text" class="form-control" id="name" placeholder="Name" value="{{ old('name') }}" required>
 		</div>
 		<div class="form-group">
 			<label for="lastname">Lastname: </label>

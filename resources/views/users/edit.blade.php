@@ -5,7 +5,7 @@
 		<tbody>
 			<tr>
 				<td class="bg-dark text-white" style="width: 16%">Name</td>
-				<td><a href="/users/{{ $user->id }}">{{ $user->name }}</a></td>
+				<td><a href="{{ $user->path() }}">{{ $user->name }}</a></td>
 			</tr>
 			<tr>
 				<td class="bg-dark text-white">Lastname</td>

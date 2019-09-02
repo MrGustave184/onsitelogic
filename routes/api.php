@@ -14,17 +14,20 @@ use App\User;
 |
 */
 
-Route::get('users', 'UsersAPIController@users');
+Route::group([], function() {
+	Route::get('users', 'UsersAPIController@users');
 
-Route::get('users/{user}', 'UsersAPIController@show');
+	Route::get('users/{user}', 'UsersAPIController@show');
 
-Route::post('users/{user}/check', 'usersAPIController@updateStatus');
+	Route::post('users/{user}/check', 'usersAPIController@updateStatus');
 
-Route::delete('users/{user}', 'usersAPIController@destroy');
+	Route::delete('users/{user}', 'usersAPIController@destroy');
 
-Route::get('categories', 'usersAPIController@categories');
+	Route::get('categories', 'usersAPIController@categories');
 
-Route::get('search', 'usersAPIController@search');
+	Route::get('search', 'usersAPIController@search');
+});
+
 
 // Create a group of routes to protect them under the API middleware
 

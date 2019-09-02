@@ -44,21 +44,17 @@
 </table>
 
 	{{-- Actions --}}
-	<a href="/users" class="btn btn-secondary text-white">Back</a>
-	<a href="/users/{{ $user->id }}/edit" class="btn btn-info text-white">Edit</a>
+	<a href="{{ \URL::to('/users') }}" class="btn btn-secondary text-white">Back</a>
+	<a href="{{$user->path() . '/edit' }}" class="btn btn-info text-white">Edit</a>
 	@if($user->status == 'inasistente')
-		<form class="inline-form" style="display:inline" method="POST" action="/users/{{ $user->id }}/check">
+		<form class="inline-form" style="display:inline" method="POST" action="{{ $user->path() . '/check'}}">
 			@csrf
 			<button type="submit" name="submit" class="btn btn-success text-white">Check In</button>
 		</form>
 	@endif
-	<form class="inline-form" style="display:inline" method="POST" action="/users/{{ $user->id }}">
+	<form class="inline-form" style="display:inline" method="POST" action="{{ $user->path() }}">
 		@csrf
 		@method('DELETE')
 		<button type="submit" name="submit" class="btn btn-danger text-white">Delete</button>
 	</form>
-
-
-
-
 @endsection

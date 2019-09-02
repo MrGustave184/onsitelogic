@@ -15,4 +15,9 @@ class User extends Model
 		{
 			return $this->belongsTo(Category::class);
 		}
+
+		public function path()
+		{
+			return \URL::to('/users') . '/' . $this->id;
+		}
 }
