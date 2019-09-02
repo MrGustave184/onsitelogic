@@ -77,8 +77,6 @@
 					status: '',
 					category: '',
 				},
-				// filter: null,
-				// filterCategory: null,
 				keywords: null,
 				user: {
 					id: '',

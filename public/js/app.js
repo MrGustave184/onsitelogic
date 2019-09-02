@@ -1863,8 +1863,6 @@ __webpack_require__.r(__webpack_exports__);
         status: '',
         category: ''
       },
-      // filter: null,
-      // filterCategory: null,
       keywords: null,
       user: {
         id: '',
