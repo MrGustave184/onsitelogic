@@ -142,4 +142,12 @@ class UsersController extends Controller
 
 			return redirect('/users')->with('success', 'User Updated');
 		}
+
+		/**
+     * Generate and download user's report
+		 */
+		 public function export()
+		 {
+			 return Excel::download(new UsersExport, 'users.csv');
+		 }
 }

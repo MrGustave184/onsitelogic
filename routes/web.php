@@ -22,6 +22,8 @@ Route::resource('/users', 'UsersController');
 
 Route::post('/users/{user}/check', 'UsersController@updateStatus');
 
+Route::get('/users/export', 'UsersController@export');
+
 // Categories
 Route::get('/categories/{category}', 'CategoriesController@index'); // Make resourceful later!
 

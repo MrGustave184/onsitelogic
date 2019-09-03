@@ -25,6 +25,9 @@
 				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
 					<a class="nav-link" href="{{ \URL::to('/users/create') }}">Register <span class="sr-only"></span></a>
 				</li>
+				<li class="nav-item {{ Request::is('users/create') ? 'active' : '' }}">
+					<a class="nav-link" href="{{ \URL::to('/users/export') }}">Generate report <span class="sr-only"></span></a>
+				</li>
 				{{-- Login --}}
 				{{-- <li class="nav-item {{ Request::is('login') ? 'active' : '' }}">
 					<a class="nav-link" href="{{ \URL::to('/login') }}">Login<span class="sr-only"></span></a>
