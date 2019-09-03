@@ -1,5 +1,8 @@
 <?php
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersExport;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,7 +25,7 @@ Route::resource('/users', 'UsersController');
 
 Route::post('/users/{user}/check', 'UsersController@updateStatus');
 
-Route::get('/users/export', 'UsersController@export');
+Route::get('/export', 'UsersController@export');
 
 // Categories
 Route::get('/categories/{category}', 'CategoriesController@index'); // Make resourceful later!
