@@ -17,13 +17,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-			$users = User::select('name', 'lastname', 'email', 'status', 'id', 'category_id')
-					->latest()
-					->paginate(15);
+			$users = User::getUsers();
 
-      return view('users.welcome', [
-				'users' => $users
-			]);
+      return view('users.welcome', compact('users'));
     }
 
     /**
@@ -65,7 +61,7 @@ class UsersController extends Controller
 				'category_id' => $request->input('category_id'),
 				'password'		=> 'password', // I NEED TO ADD LOGIN FUNCTIONALITY
 				'is_admin'		=> 0,
-				'status' 			=> 'inasistente' // As default in the db?
+				'status' 			=> 'non live' // As default in the db?
 			]);
 
 			return redirect('/users')->with('success', 'User Registered');
@@ -138,9 +134,7 @@ class UsersController extends Controller
      */
 		public function updateStatus(User $user)
 		{
-			$status = $user->status == 'asistente' ? 'inasistente' : 'asistente';
-
-			$user->update(['status' => $status]);
+			$user->updateStatus();
 
 			return redirect('/users')->with('success', 'User Updated');
 		}

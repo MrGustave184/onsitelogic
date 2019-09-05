@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\User;
+
 use App\Category;
 
 class UsersAPIController extends Controller
 {
 		// Available filters
-		protected $filters = ['checkedIn', 'notCheckedIn'];
+		protected $filters = ['live', 'nonLive'];
 
 		/**
 		* Fetch all users
@@ -17,7 +19,7 @@ class UsersAPIController extends Controller
 		public function users(Request $request)
 		{
 			// Build basic query
-			$users = $this->buildQuery();
+			$users = User::buildQuery();
 
 			// Validate/sanitize and apply filters if any
 			$filter 	= $request->filter 		? filter_var($request->filter, FILTER_SANITIZE_STRIPPED) : '';
@@ -64,9 +66,7 @@ class UsersAPIController extends Controller
 
 		public function updateStatus (User $user)
 		{
-			$status = $user->status == 'asistente' ? 'inasistente' : 'asistente';
-
-			$user->update(['status' => $status]);
+			$user->updateStatus();
 
 			return $user->status;
 		}
@@ -74,12 +74,12 @@ class UsersAPIController extends Controller
 		/**
 		* Filters
 		*/
-		private function checkedIn($builder) {
-			return $builder->where('users.status', 'asistente');
+		private function live($builder) {
+			return $builder->where('users.status', 'live');
 		}
 
-		private function notCheckedIn($builder) {
-			return $builder->where('users.status', 'inasistente');
+		private function nonLive($builder) {
+			return $builder->where('users.status', 'non live');
 		}
 
 		private function byCategory($builder, $category) {
@@ -101,13 +101,5 @@ class UsersAPIController extends Controller
 
 		private function categoryExists($id) {
 			return Category::where('id', $id)->exists();
-		}
-
-		private function buildQuery() {
-			$query = \DB::table('users')
-				->join('categories', 'users.category_id', '=', 'categories.id')
-				->select('users.name', 'users.lastname', 'users.email', 'users.status', 'users.id', 'categories.name as category');
-
-			return $query;
 		}
 }

@@ -9,8 +9,8 @@
 		<div class="row filters">
 			<h5 class="filter-title">Filters: </h5>
 			<a class="btn btn-secondary btn-sm filter-button text-white" @click="clearFilters('filter')">Clear</a>
-			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'checkedIn'}" @click="filterUsers('filter', 'checkedIn')" >Checked in</a>
-			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'notCheckedIn'}"  @click="filterUsers('filter', 'notCheckedIn')" >Not Checked in</a>
+			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'live'}" @click="filterUsers('filter', 'live')" >Live</a>
+			<a class="btn btn-sm btn-secondary filter-button text-white" :class="{'btn-info':filter.status == 'nonLive'}"  @click="filterUsers('filter', 'nonLive')" >Non Live</a>
 		</div>
 		<div class="row filters">
 			<h5 class="filter-title">Categories: </h5>
@@ -39,16 +39,16 @@
 					<td>{{ user.email }}</td>
 					<td>{{ user.category }}</td>
 					<td>
-						<img v-show="user.status == 'asistente'" class="mb-2" src="images/check.png" alt="" width="24" height="24">
-						<img v-show="user.status == 'inasistente'" class="mb-2" src="images/uncheck.png" alt="" width="24" height="24">
+						<img v-show="user.status == 'live'" class="mb-2" src="images/check.png" alt="" width="24" height="24">
+						<img v-show="user.status == 'non live'" class="mb-2" src="images/uncheck.png" alt="" width="24" height="24">
 						{{ user.status }}
 						</td>
 
 					<!-- Actions -->
 					<td class="row">
 						<div class="actionButton">
-							<a v-show="user.status == 'inasistente'" class="btn btn-success btn-sm text-white" @click="checkUser(user)" >Check in</a>
-							<a v-show="user.status == 'asistente'" class="btn btn-secondary btn-sm text-white" @click="checkUser(user)">Uncheck</a>
+							<a v-show="user.status == 'non live'" class="btn btn-success btn-sm text-white" @click="checkUser(user)" >Check in</a>
+							<a v-show="user.status == 'live'" class="btn btn-secondary btn-sm text-white" @click="checkUser(user)">Uncheck</a>
 						</div>
 						<div class="actionButton">
 							<a v-bind:href="'/users/' + user.id + '/edit'" class="btn btn-info btn-sm text-white">Edit</a>
@@ -142,11 +142,11 @@
 			 */
 			checkUser: function (user) {
 				// If user is already checked in, ask for comfirmation before uncheck it
-				if(user.status == 'asistente' && (! confirm("Do you really want to uncheck this user?"))) {
+				if(user.status == 'live' && (! confirm("Do you really want to uncheck this user?"))) {
 					return;
 				}
 				
-				user.status = user.status == 'asistente' ? 'inasistente' : 'asistente';
+				user.status = user.status == 'live' ? 'non live' : 'live';
 
 				axios.post('api/users/' + user.id + '/check')
 					.then((response) => {

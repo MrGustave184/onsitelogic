@@ -10,7 +10,7 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'lastname' => $faker->lastname,
-        'status' => $faker->randomElement(['asistente', 'inasistente']),
+        'status' => $faker->randomElement(['live', 'non live']),
         'email' => $faker->unique()->safeEmail,
 				'birthdate' => $faker->date(),
 				'phone' => $faker->phoneNumber,

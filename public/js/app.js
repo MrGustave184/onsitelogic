@@ -1927,11 +1927,11 @@ __webpack_require__.r(__webpack_exports__);
      */
     checkUser: function checkUser(user) {
       // If user is already checked in, ask for comfirmation before uncheck it
-      if (user.status == 'asistente' && !confirm("Do you really want to uncheck this user?")) {
+      if (user.status == 'live' && !confirm("Do you really want to uncheck this user?")) {
         return;
       }
 
-      user.status = user.status == 'asistente' ? 'inasistente' : 'asistente';
+      user.status = user.status == 'live' ? 'non live' : 'live';
       axios.post('api/users/' + user.id + '/check').then(function (response) {
         console.log(response.data);
       })["catch"](function (error) {
@@ -39453,28 +39453,28 @@ var render = function() {
         "a",
         {
           staticClass: "btn btn-sm btn-secondary filter-button text-white",
-          class: { "btn-info": _vm.filter.status == "checkedIn" },
+          class: { "btn-info": _vm.filter.status == "live" },
           on: {
             click: function($event) {
-              return _vm.filterUsers("filter", "checkedIn")
+              return _vm.filterUsers("filter", "live")
             }
           }
         },
-        [_vm._v("Checked in")]
+        [_vm._v("Live")]
       ),
       _vm._v(" "),
       _c(
         "a",
         {
           staticClass: "btn btn-sm btn-secondary filter-button text-white",
-          class: { "btn-info": _vm.filter.status == "notCheckedIn" },
+          class: { "btn-info": _vm.filter.status == "nonLive" },
           on: {
             click: function($event) {
-              return _vm.filterUsers("filter", "notCheckedIn")
+              return _vm.filterUsers("filter", "nonLive")
             }
           }
         },
-        [_vm._v("Not Checked in")]
+        [_vm._v("Non Live")]
       )
     ]),
     _vm._v(" "),
@@ -39546,8 +39546,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: user.status == "asistente",
-                      expression: "user.status == 'asistente'"
+                      value: user.status == "live",
+                      expression: "user.status == 'live'"
                     }
                   ],
                   staticClass: "mb-2",
@@ -39564,8 +39564,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: user.status == "inasistente",
-                      expression: "user.status == 'inasistente'"
+                      value: user.status == "non live",
+                      expression: "user.status == 'non live'"
                     }
                   ],
                   staticClass: "mb-2",
@@ -39588,8 +39588,8 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: user.status == "inasistente",
-                          expression: "user.status == 'inasistente'"
+                          value: user.status == "non live",
+                          expression: "user.status == 'non live'"
                         }
                       ],
                       staticClass: "btn btn-success btn-sm text-white",
@@ -39609,8 +39609,8 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: user.status == "asistente",
-                          expression: "user.status == 'asistente'"
+                          value: user.status == "live",
+                          expression: "user.status == 'live'"
                         }
                       ],
                       staticClass: "btn btn-secondary btn-sm text-white",

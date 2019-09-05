@@ -46,7 +46,7 @@
 	{{-- Actions --}}
 	<a href="{{ \URL::to('/users') }}" class="btn btn-secondary text-white">Back</a>
 	<a href="{{$user->path() . '/edit' }}" class="btn btn-info text-white">Edit</a>
-	@if($user->status == 'inasistente')
+	@if($user->status == 'non live')
 		<form class="inline-form" style="display:inline" method="POST" action="{{ $user->path() . '/check'}}">
 			@csrf
 			<button type="submit" name="submit" class="btn btn-success text-white">Check In</button>

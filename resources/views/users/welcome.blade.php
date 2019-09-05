@@ -30,7 +30,7 @@
 						<td>{{ $user->lastname }}</td>
 						<td>{{ $user->email }}</td>
 						<td>{{ $user->category->name }}</td>
-						<td id="asistente">{{ $user->status }}</td>
+						<td id="live">{{ $user->status }}</td>
 					</tr>
 				@endforeach
 			</tbody>

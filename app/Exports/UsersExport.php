@@ -16,7 +16,7 @@ class UsersExport implements FromQuery, ShouldAutosize, WithHeadings, WithEvents
 {
     public function query()
     {
-				return User::select('users.name', 'users.lastname', 'users.idNumber', 'users.status', 'categories.name as category', 'users.email')
+				return User::select('users.name', 'users.lastname', 'users.idNumber', 'users.status', 		'categories.name as category', 'users.email')
 						->join('categories', 'users.category_id', '=', 'categories.id');
 		}
 
