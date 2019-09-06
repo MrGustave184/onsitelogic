@@ -19,13 +19,13 @@ Route::group([], function() {
 
 	Route::get('users/{user}', 'UsersAPIController@show');
 
-	Route::post('users/{user}/check', 'usersAPIController@updateStatus');
+	Route::post('users/{user}/check', 'UsersAPIController@updateStatus');
 
-	Route::delete('users/{user}', 'usersAPIController@destroy');
+	Route::delete('users/{user}', 'UsersAPIController@destroy');
 
-	Route::get('categories', 'usersAPIController@categories');
+	Route::get('categories', 'UsersAPIController@categories');
 
-	Route::get('search', 'usersAPIController@search');
+	Route::get('search', 'UsersAPIController@search');
 });
 
 
