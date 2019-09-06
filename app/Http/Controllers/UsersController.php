@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
+
+use App\Http\Requests\UserCreateRequest;
+
+use App\Http\Requests\UserUpdateRequest;
+
 use App\User;
+
 use App\Category;
+
 use App\Exports\UsersExport;
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class UsersController extends Controller
@@ -38,19 +46,9 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-			// Validation 
-			$this->validate($request, [
-				'name' 				=> 'required',
-				'lastname' 		=> 'required',
-				'idNumber' 		=> 'required|alpha_dash|unique:users|starts_with:V-,E-',
-				'email' 			=> 'email|unique:users',
-				'birthdate' 	=> 'date|required|before:today',
-				'category_id'	=> 'required|integer|exists:categories,id'
-			]);
-
-			User::create([
+			$user = User::create([
 				'name' 				=> $request->input('name'),
 				'lastname' 		=> $request->input('lastname'),
 				'idNumber'		=> $request->input('idNumber'),
@@ -96,19 +94,9 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-				$this->validate($request, [
-					'name' 				=> 'required',
-					'lastname' 		=> 'required',
-					'email' 			=> 'email',
-					'birthdate' 	=> 'date|required',
-					'category_id'	=> 'integer|exists:categories,id'
-				]);	
-
-				$user->update(request(
-					['name', 'lastname', 'email', 'phone', 'address', 'birthdate']
-				));
+				$user->update($request->validated());
 
 				return redirect('/users/' . $user->id)->with('success', 'User has been updated');
     }

@@ -22,10 +22,13 @@ class UsersAPIController extends Controller
 			$users = User::buildQuery();
 
 			// Validate/sanitize and apply filters if any
+
+			// Extract this to a helper or sanitize class
 			$filter 	= $request->filter 		? filter_var($request->filter, FILTER_SANITIZE_STRIPPED) : '';
 			$category = $request->category 	? filter_var($request->category, FILTER_VALIDATE_INT) : '';
 			$keywords = $request->keywords 	? filter_var($request->keywords, FILTER_SANITIZE_STRIPPED) : '';
 
+			// Build this into query scopes
 			if($filter && in_array($filter, $this->filters)) {
 				$users = $this->$filter($users);
 			}
@@ -71,6 +74,7 @@ class UsersAPIController extends Controller
 			return $user->status;
 		}
 
+		// Move all this to a helper!
 		/**
 		* Filters
 		*/
